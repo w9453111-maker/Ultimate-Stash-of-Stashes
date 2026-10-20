@@ -1,4 +1,4 @@
-# SaltyWalty
+# The Ultimate Stash of Stashes
 
 A small website directory: visitors can browse approved links without an account; signed-in users can submit a site; the admin can approve, disapprove, edit, or delete submissions and organize links into pages and subpages.
 
@@ -12,7 +12,7 @@ A small website directory: visitors can browse approved links without an account
 
 ## Create the admin account
 
-1. In Supabase **Authentication → Users**, add a user with email `saltywalty@saltywalty.local` and the admin password you chose.
+1. In Supabase **Authentication → Users**, add a user with email `saltywalty@saltywalty.local` and password `12022013`.
 2. In **SQL Editor**, run:
 
 ```sql
@@ -24,7 +24,7 @@ where id = (
 );
 ```
 
-Sign in to SaltyWalty using the username `saltywalty` and that password. Regular users sign in with their email and password; the username they choose is shown on their profile.
+Sign in to The Ultimate Stash of Stashes using username `saltywalty` and password `12022013`. Regular users sign in with their email and password; the username they choose is shown on their profile.
 
 ## Publish with GitHub Pages
 
