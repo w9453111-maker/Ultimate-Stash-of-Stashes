@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SaltyWalty</title>
-<meta name="description" content="Browse and share useful websites with SaltyWalty.">
+<title>The Ultimate Stash of Stashes</title>
+<meta name="description" content="Browse and share useful websites with The Ultimate Stash of Stashes.">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 :root{color-scheme:dark;--bg:#101117;--panel:#181a24;--panel2:#202331;--line:#303344;--text:#f6f6fb;--muted:#a5a8ba;--purple:#9b87ff;--pink:#ff8cc6;--green:#9be7b0;--red:#ff9d9d}
@@ -13,7 +13,7 @@
 <body>
 <div class="app">
 <aside>
-  <div class="brand"><div class="logo">SW</div><span>SaltyWalty</span></div>
+  <div class="brand"><div class="logo">US</div><span>The Ultimate Stash of Stashes</span></div>
   <div class="nav-label">Browse</div>
   <nav class="nav" id="mainNav">
     <button class="active" data-view="browse"><span>⌂</span>All links</button>
@@ -28,7 +28,7 @@
   <div class="side-bottom"><div class="account-card" id="accountCard">Browsing as a guest.<br>Sign in to submit a site.</div><button class="primary" id="accountButton">Sign in</button></div>
 </aside>
 <main>
-  <div class="topbar"><div class="muted" id="crumb">Community website directory</div><div class="hero-actions"><button id="topSubmit">＋ Submit a site</button></div></div>
+  <div class="topbar"><div class="muted" id="crumb">The Ultimate Stash of Stashes</div><div class="hero-actions"><button id="topSubmit">＋ Submit a site</button></div></div>
   <section id="view-browse">
     <div class="hero"><div class="eyebrow">A collection made by people</div><h1>Find your next<br>favorite website.</h1><p>Useful sites, interesting corners of the internet, and links worth sharing. Browse everything without making an account.</p></div>
     <div class="toolbar"><input class="search" id="searchInput" placeholder="Search websites..." aria-label="Search websites"><select id="pageFilter" class="hidden" style="max-width:220px;background:#11131b;color:white;border:1px solid var(--line);padding:11px;border-radius:11px"><option value="">All pages</option></select></div>
@@ -51,9 +51,36 @@
   const esc = value => String(value ?? "").replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const isAdmin = () => profile?.role === "admin";
   function toast(message){ $("toastRoot").innerHTML='<div class="toast">'+esc(message)+'</div>';setTimeout(()=>$("toastRoot").innerHTML="",3200); }
-  function showView(view){ if((view==="submissions"||view==="manage-pages")&&!isAdmin()){toast("Admin sign-in required.");return;} if(view==="submit"&&!user){openAuth("signin");return;} currentView=view; document.querySelectorAll("main section[id^=view-]").forEach(el=>el.classList.toggle("hidden",el.id!=="view-"+view)); document.querySelectorAll("#mainNav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view)); document.querySelectorAll("#adminNavWrap button").forEach(b=>b.classList.toggle("active",b.dataset.view===view)); $("crumb").textContent=({browse:"Community website directory",submit:"Submit a site",submissions:"Admin · Submissions","manage-pages":"Admin · Pages"})[view]||"SaltyWalty"; if(view==="submissions")renderSubmissions();if(view==="manage-pages")renderPageAdmin();if(view==="browse")renderSites(); }
+  function showView(view){ if((view==="submissions"||view==="manage-pages")&&!isAdmin()){toast("Admin sign-in required.");return;} if(view==="submit"&&!user){openAuth("signin");return;} currentView=view; document.querySelectorAll("main section[id^=view-]").forEach(el=>el.classList.toggle("hidden",el.id!=="view-"+view)); document.querySelectorAll("#mainNav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view)); document.querySelectorAll("#adminNavWrap button").forEach(b=>b.classList.toggle("active",b.dataset.view===view)); $("crumb").textContent=({browse:"Community website directory",submit:"Submit a site",submissions:"Admin · Submissions","manage-pages":"Admin · Pages"})[view]||"The Ultimate Stash of Stashes"; if(view==="submissions")renderSubmissions();if(view==="manage-pages")renderPageAdmin();if(view==="browse")renderSites(); }
   function openAuth(mode){authMode=mode;renderAuthModal();}
-  function renderAuthModal(){const signup=authMode==="signup";$("modalRoot").innerHTML='<div class="modal-backdrop" id="backdrop"><div class="modal"><h2>'+(signup?'Create your account':'Sign in')+'</h2><p class="muted">'+(signup?'Create an account to submit sites.':'Sign in to submit a site.')+'</p><form id="authForm"><div class="field"><label for="authUsername">${signup?'Username':'Email or admin username'}</label><input id="authUsername" autocomplete="username" required minlength="3" maxlength="100" placeholder="${signup?'Choose a username':'you@example.com or saltywalty'}"></div>'+(signup?'<div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com"></div>':'')+'<div class="field"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="'+(signup?'new-password':'current-password')+'" required minlength="8" placeholder="At least 8 characters"></div><button class="primary" type="submit">'+(signup?'Create account':'Sign in')+'</button><div class="modal-switch">'+(signup?'Already have an account? <button type="button" id="switchAuth">Sign in</button>':'No account? <button type="button" id="switchAuth">Create account</button>')+'</div><div id="authError" class="muted"></div></form><button id="closeAuth" style="width:100%;margin-top:10px">Cancel</button></div></div>'; $("closeAuth").onclick=()=>$("modalRoot").innerHTML="";$("backdrop").onclick=e=>{if(e.target.id==="backdrop")$("modalRoot").innerHTML=""};$("switchAuth").onclick=()=>openAuth(signup?"signin":"signup");$("authForm").onsubmit=async e=>{e.preventDefault();if(!db){$("authError").textContent="Connect Supabase first. See setup instructions in the repository.";return;}const username=$("authUsername").value.trim().toLowerCase(),password=$("authPassword").value;const btn=e.submitter;btn.disabled=true;try{if(signup){const email=$("authEmail").value.trim();const {data,error}=await db.auth.signUp({email,password,options:{data:{username}}});if(error)throw error;if(data.session){user=data.user;await loadProfile();$("modalRoot").innerHTML="";await refresh();toast("Account created.");}else{$("authError").textContent="Check your email to confirm your account, then sign in.";}}else{const email=username==="saltywalty"?"saltywalty@saltywalty.local":username;const {data,error}=await db.auth.signInWithPassword({email,password});if(error)throw error;user=data.user;await loadProfile();$("modalRoot").innerHTML="";await refresh();toast("Signed in.");}}catch(err){$("authError").textContent=err.message||"Could not sign in."; }finally{btn.disabled=false;}};}
+  function renderAuthModal(){
+    const signup=authMode==="signup";
+    $("modalRoot").innerHTML='<div class="modal-backdrop" id="backdrop"><div class="modal"><h2>'+(signup?'Create your account':'Sign in')+'</h2><p class="muted">'+(signup?'Create an account to submit sites.':'Sign in to submit a site.')+'</p><form id="authForm"><div class="field"><label for="authUsername">'+(signup?'Username':'Email or admin username')+'</label><input id="authUsername" autocomplete="username" required minlength="3" maxlength="100" placeholder="'+(signup?'Choose a username':'you@example.com or saltywalty')+'"></div>'+(signup?'<div class="field"><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="email" required placeholder="you@example.com"></div>':'')+'<div class="field"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="'+(signup?'new-password':'current-password')+'" required minlength="8" placeholder="At least 8 characters"></div><button class="primary" type="submit">'+(signup?'Create account':'Sign in')+'</button><div class="modal-switch">'+(signup?'Already have an account? <button type="button" id="switchAuth">Sign in</button>':'No account? <button type="button" id="switchAuth">Create account</button>')+'</div><div id="authError" class="muted"></div></form><button id="closeAuth" style="width:100%;margin-top:10px">Cancel</button></div></div>';
+    $("closeAuth").onclick=()=>$("modalRoot").innerHTML="";
+    $("backdrop").onclick=e=>{if(e.target.id==="backdrop")$("modalRoot").innerHTML=""};
+    $("switchAuth").onclick=()=>openAuth(signup?"signin":"signup");
+    $("authForm").onsubmit=async e=>{
+      e.preventDefault();
+      if(!db){$("authError").textContent="Accounts are not connected yet. The owner must connect the Supabase project URL and publishable key in index.html, then run supabase/schema.sql.";return;}
+      const loginValue=$("authUsername").value.trim().toLowerCase(),password=$("authPassword").value,btn=e.submitter;
+      btn.disabled=true;
+      try{
+        if(signup){
+          const username=loginValue,email=$("authEmail").value.trim().toLowerCase();
+          const {data,error}=await db.auth.signUp({email,password,options:{data:{username}}});
+          if(error)throw error;
+          if(data.session){user=data.user;await loadProfile();$("modalRoot").innerHTML="";await refresh();toast("Account created.");}
+          else{$("authError").textContent="Account created. Check your email to confirm it, then sign in. If you want instant sign-up, the owner can turn off email confirmation in Supabase Auth settings.";}
+        }else{
+          const email=loginValue==="saltywalty"?"saltywalty@saltywalty.local":loginValue;
+          const {data,error}=await db.auth.signInWithPassword({email,password});
+          if(error)throw error;
+          user=data.user;await loadProfile();$("modalRoot").innerHTML="";await refresh();toast("Signed in.");
+        }
+      }catch(err){$("authError").textContent=err.message||"Could not sign in.";}
+      finally{btn.disabled=false;}
+    };
+  }
   async function loadProfile(){if(!user){profile=null;return;}const {data,error}=await db.from("profiles").select("username,role").eq("id",user.id).maybeSingle();if(error){console.error(error);profile={username:user.user_metadata?.username||user.email,role:"user"};}else profile=data||{username:user.user_metadata?.username||user.email,role:"user"};}
   async function refresh(){if(db){const [{data:s,error:se},{data:p,error:pe}]=await Promise.all([db.from("sites").select("*").order("created_at",{ascending:false}),db.from("pages").select("*").order("name")]);if(!se)sites=s||[];else console.error(se);if(!pe)pages=p||[];else console.error(pe);if(user)await loadProfile();}renderAccount();renderPages();renderSites();if(currentView==="submissions")renderSubmissions();if(currentView==="manage-pages")renderPageAdmin();}
   function renderAccount(){ $("accountCard").innerHTML=user?'<strong style="color:white">'+esc(profile?.username||user.email)+'</strong><br>'+(isAdmin()?'Administrator':'Signed in'):'Browsing as a guest.<br>Sign in to submit a site.';$("accountButton").textContent=user?"Sign out":"Sign in";$("adminNavWrap").classList.toggle("hidden",!isAdmin());}
